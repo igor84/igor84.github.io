@@ -5,6 +5,25 @@
 }
 
 body {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 400;
+    line-height: 1.4;
+}
+
+#sidebar ul.collapsible-menu label {
+    left: 3px;
+}
+
+.children-li p {
+    font-size: 1em;
+    font-style: normal;
+}
+
+#body .children-li a.highlight {
+    font-size: larger;
+    color: var(--INTERNAL-MENU-SECTION-ACTIVE-CATEGORY-color);
+}
+
+.children-li li {
+    margin-top: 1em;
 }
