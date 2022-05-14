@@ -1,0 +1,62 @@
+baseURL = "https://igor84.github.io"
+languageCode = 'en-us'
+title = "Dr Iggy's Coding Adventures"
+theme = "relearn"
+
+# For search functionality
+[outputs]
+  # add JSON to the home to support lunr search; This is a mandatory setting
+  # for the search functionality
+  # add PRINT to home, section and page to activate feature to print whole
+  # chapters
+  home = ["HTML", "RSS", "PRINT", "JSON"]
+  section = ["HTML", "RSS", "PRINT"]
+  page = ["HTML", "RSS", "PRINT"]
+
+[params]
+  themeVariant = [ "relearn-dark", "neon", "relearn-light" ]
+  showVisitedLinks = true
+  collapsibleMenu = true
+  disableBreadcrumb = false
+  disableNextPrev = false
+  disableLandingPageButton = true
+  titleSeparator = "::"
+  disableSeoHiddenPages = true
+  custom_css = ["css/custom.css"]
+
+[markup]
+  [markup.highlight]
+    # if `guessSyntax = true`, there will be no unstyled code even if no language
+    # was given BUT mermaid code fences will not work anymore! So this is a mandatory
+    # setting for your site
+    guessSyntax = false
+
+    # here we use our own modified chroma syntax highlightning style
+    # which is imported in theme-relearn-light.css / theme-relearn-dark.css;
+    # if you want to use a predefined style instead:
+    # - remove the following `noClasses`
+    # - set the following `style` to a predefined style name
+    # - remove the `@import` of the self-defined chroma stylesheet from your CSS files
+    #   (here eg.: theme-relearn-light.css / theme-relearn-dark.css)
+    noClasses = false
+    # style = "tango"
+  [markup.goldmark.renderer]
+    # activated for this showcase to use HTML and JavaScript; decide on your own needs;
+    # if in doubt, remove this line
+    unsafe = true
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-address-card'></i> About me"
+url = "/more/about-me/"
+weight = 10
+
+[[menu.shortcuts]]
+name = "<i class='fab fa-fw fa-github'></i> GitHub profile"
+identifier = "ds"
+url = "https://github.com/igor84/"
+weight = 11
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-fw fa-tags'></i> Tags"
+url = "tags/"
+weight = 20
