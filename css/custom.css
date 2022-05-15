@@ -27,3 +27,46 @@ body {
 .children-li li {
     margin-top: 1em;
 }
+
+.read-full-post {
+    margin: 1em 0;
+}
+
+.post-metadata > span {
+    margin-right: 0.5em;
+}
+
+.post-tag {
+    padding: 0 5px 5px 5px;
+    border: 1px solid var(--MENU-SECTION-HR-color);
+    border-radius: 3px;
+    background-color: var(--MENU-SECTIONS-ACTIVE-BG-color);
+}
+
+.post-paging {
+    display: flex;
+    flex: 1 1;
+    align-items: center;
+    margin-top: 2em;
+}
+
+.post-paging-item {
+    flex: 1 1 0;
+}
+
+.post-paging-prev {
+    text-align: left;
+}
+
+.post-paging-next {
+    text-align: right;
+}
+
+.post-summary {
+    padding-bottom: 2em;
+    border-bottom: 1.5px dashed var(--MENU-SECTION-HR-color);
+}
+
+#body .post-summary h3 {
+    margin-top: 1.5rem;
+}
