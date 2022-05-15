@@ -1,0 +1,25 @@
+{{ $pag := $.Paginator }}
+
+<nav class="post-paging" role="navigation">
+  <div class="post-paging-item post-paging-prev">
+    {{ if $pag.HasPrev }}
+      <a href="{{ $pag.Prev.URL }}">
+        <i class="fas fa-arrow-left"></i>
+        PREV
+      </a>
+    {{ end }}
+  </div>
+  <div class="post-paging-state">Page {{ $pag.PageNumber }} of {{ $pag.TotalPages }}</div>
+  <div class="post-paging-item post-paging-next">
+    {{ if $pag.HasNext }}
+    {{ if (eq .Kind "home") }}
+      <a href="blog{{ $pag.Next.URL }}">
+    {{ else }}
+      <a href="{{ $pag.Next.URL }}">
+    {{ end }}
+        NEXT
+        <i class="fas fa-arrow-right"></i>
+      </a>
+    {{ end }}
+  </div>
+</nav>

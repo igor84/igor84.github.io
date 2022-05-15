@@ -1,0 +1,12 @@
+{{- .Scratch.Set "relearnOutputFormat" "HTML" }}
+{{- partial "header.html" . }}
+  <article>
+    {{ .Content | safeHTML }}
+
+    {{ partial "posts-list.html" . }}
+
+    <footer>
+      {{- partial "content-footer.html" . }}
+    </footer>
+  </article>
+{{- partial "footer.html" . }}

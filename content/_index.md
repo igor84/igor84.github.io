@@ -2,4 +2,6 @@
 title = "Dr Iggy's Coding Adventures"
 +++
 
-### Work in progress
+### Welcome to Dr Iggy's coding adventures
+
+![Coding header image](zig-coding.jpg)

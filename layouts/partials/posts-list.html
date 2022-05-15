@@ -1,0 +1,30 @@
+{{ $pages := where .RegularPages "Type" "in" .Site.Params.mainSections }}
+{{ if (eq .Kind "home") }}
+  {{ $pages = where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+{{ end }}
+
+{{ $paginator := .Paginate $pages }}
+{{ range $paginator.Pages }}
+  <article class="post-summary">
+    <h3 class="gblog-post__title">
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </h3>
+
+    <section>
+      {{ .Summary }}
+    </section>
+    <div class="read-full-post">
+      {{ if .Truncated }}
+        <a title="Read full post" href="{{ .RelPermalink }}">
+          Read full post
+          <i class="fas fa-arrow-alt-circle-right"></i>
+        </a>
+      {{ end }}
+    </div>
+
+    <footer class="post-metadata">
+      {{ partial "metadata.html" . }}
+    </footer>
+  </article>
+{{ end }}
+{{ partial "pagination.html" . }}
