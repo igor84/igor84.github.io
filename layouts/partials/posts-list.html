@@ -6,12 +6,12 @@
 {{ $paginator := .Paginate $pages }}
 {{ range $paginator.Pages }}
   <article class="post-summary">
-    <h3 class="gblog-post__title">
+    <h3>
       <a href="{{ .RelPermalink }}">{{ .Title }}</a>
     </h3>
 
     <section>
-      {{ .Summary }}
+      {{ .Summary | safeHTML }}
     </section>
     <div class="read-full-post">
       {{ if .Truncated }}
