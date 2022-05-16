@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>game on Dr Iggy's Coding Adventures</title><link>https://igor84.github.io/tags/game/</link><description>Recent content in game on Dr Iggy's Coding Adventures</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 16 May 2022 18:17:32 +0200</lastBuildDate><atom:link href="https://igor84.github.io/tags/game/index.xml" rel="self" type="application/rss+xml"/><item><title>How do I stay motivated</title><link>https://igor84.github.io/blog/how-do-i-stay-motivated/</link><pubDate>Mon, 16 May 2022 18:17:32 +0200</pubDate><guid>https://igor84.github.io/blog/how-do-i-stay-motivated/</guid><description>&lt;p>I am doing programming for 24 years now and I don&amp;rsquo;t see myself getting bored with it. There is
+always one more thing to learn or to solve and I really want to know everything &lt;i class="far
+fa-grin-stars">&lt;/i>.&lt;/p>
+&lt;p>The goal I am most interested in is making my own game engine. But I don&amp;rsquo;t want to take the SDL
+library, some image and 3D data loading library and just write rendering logic. I want to learn how
+it all works.&lt;/p></description></item></channel></rss>
