@@ -19,7 +19,9 @@ know every little thing that comes on the way.
 I don't care that I will never get done. I don't care if in 10 years I am still scratching the
 surface. As long as I am learning something new I am happy.
 
-And I do have to confess it is easy to get sidetracked. I want to write the png loader, but for that
+### Obstacles
+
+I do have to confess it is easy to get sidetracked. I want to write the png loader, but for that
 I need a decompression library which needs an Adler hashing algorithm. I would check if there are
 good implementations of those in the language I am working on but if for any reason I am not happy
 about that implementation or I find someone wrote a better one in another language I want to port
