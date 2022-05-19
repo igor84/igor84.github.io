@@ -296,69 +296,6 @@ function initArrowNav(){
     });
 }
 
-function initMenuScrollbar(){
-    if( isPrint ){
-        return;
-    }
-
-    var content = '#body-inner';
-    var autofocus = false;
-    document.addEventListener('keydown', function(event){
-        // for initial keyboard scrolling support, no element
-        // may be hovered, but we still want to react on
-        // cursor/page up/down. because we can't hack
-        // the scrollbars implementation, we try to trick
-        // it and give focus to the scrollbar - only
-        // to just remove the focus right after scrolling
-        // happend
-        var p = document.querySelector(content).matches(':hover');
-        var m = document.querySelector('#content-wrapper').matches(':hover');
-        var f = event.target.matches( formelements );
-        if( !p && !m && !f ){
-            // only do this hack if none of our scrollbars
-            // is hovered
-            autofocus = true;
-            // if we are showing the sidebar as a flyout we
-            // want to scroll the content-wrapper, otherwise we want
-            // to scroll the body
-            var n = document.querySelector('body').matches('.sidebar-flyout');
-            if( n ){
-                psm.scrollbarY.focus();
-            }
-            else{
-                psc.scrollbarY.focus();
-            }
-        }
-    });
-    // scrollbars will install their own keyboard handlers
-    // that need to be executed inbetween our own handlers
-    var psm = new PerfectScrollbar('#content-wrapper');
-    var psc = new PerfectScrollbar(content);
-    document.addEventListener('keydown', function(){
-        // if we facked initial scrolling, we want to
-        // remove the focus to not leave visual markers on
-        // the scrollbar
-        if( autofocus ){
-            psc.scrollbarY.blur();
-            psm.scrollbarY.blur();
-            autofocus = false;
-        }
-    });
-    // on resize, we have to redraw the scrollbars to let new height
-    // affect their size
-    window.addEventListener('resize', function(){
-        psm && psm.update();
-        psc && psc.update();
-    });
-    // now that we may have collapsible menus, we need to call a resize
-    // for the menu scrollbar if sections are expanded/collapsed
-    document.querySelectorAll('#sidebar .collapsible-menu input.toggle').forEach( function(e){
-        e.addEventListener('change', function(){
-            psm && psm.update();
-        });
-    });
-}
-
 function initLightbox(){
     // wrap image inside a lightbox (to get a full size view in a popup)
     var images = $("main#body-inner img").not(".inline");
@@ -560,7 +497,6 @@ jQuery(function() {
     initArrowNav();
     initMermaid();
     initSwagger();
-    initMenuScrollbar();
     scrollToActiveMenu();
     scrollToFragment();
     initLightbox();
