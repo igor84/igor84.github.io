@@ -31,7 +31,7 @@ In the end we did some measurements and concluded that impact isn't as bad as we
 
 So, from performance standpoint it would be ideal if our developers wouldn't hate to always type:
 
-```
+```cs
 if (logger.IsLevelEnabled(LogLevel.Info)) {
     logger.Info($"User {userId} is starting a match {matchId} with {injuredNum} injured players.");
 }
@@ -44,7 +44,8 @@ But of course they do. Not just to type but also to read. But what if we make it
 logger.Info?.Log($"User {userId} is starting a match {matchId} with {injuredNum} injured players.");
 ```
 
-`logger.Info` is now a property that returns an optional struct. If the logging is disabled it will return null and the part after `?.` will not be executed at all. Unity still doesn't support all types to be nullable like .net6 does. That is why it must return an optional struct so that the compiler in Unity won't allow you to just call the `.Log()` method directly. It will only compile if you call it using`?.Log()`.
+`logger.Info` is now a property that returns an optional struct. If the logging is disabled it will return null and the part after `?.` will not be executed at all. Unity still doesn't support all types to be nullable like .net6 does. That is why it must return an optional struct so that the compiler in Unity won't allow you to just call the `.Log()` method directly. It will only compile if you call it using `?.Log()`. Also struct will not
+generate garbage for the garbage collector.
 
 If we wanted to convert all our log calls to this we could just execute Regex search and replace a few times.
 
