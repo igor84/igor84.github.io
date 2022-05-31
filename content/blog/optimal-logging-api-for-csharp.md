@@ -17,7 +17,7 @@ But our project grew and grew and at one point became complex enough that we had
 // specific tag that it will add for each log line
 
 // The call then looks like this:
-logger.Info($"User {userId} is starting a match {matchId} with {injuredNum} injured players.");
+logger.Info($"User {userId} from {cityName} logged in on {logInTime}.");
 ```
 
 The code inside that method would check if `Info` level is enabled for that logger's tag and
@@ -31,9 +31,14 @@ if we did it the "correct" way it would still need to execute code that generate
 arguments and to possibly box those arguments only to then conclude it doesn't need any of that
 inside the method because logs are disabled for that tag and level.
 
-The best solution we found online is a great [Zero Allocation Logger](https://github.com/Cysharp/ZLogger/). It also avoids boxing of parameters by having many overloads for logging methods with different number of generic parameters. It would still require that we refactor our huge code base never to use string interpolation and the api still expects string as a first parameter so it can't force the developer not to use string interpolation.
+The best solution we found online is a great [Zero Allocation Logger](https://github.com/Cysharp/ZLogger/).
+It also avoids boxing of parameters by having many overloads for logging methods with different number
+of generic parameters. It would still require that we refactor our huge code base never to use string
+interpolation and the api still expects string as a first parameter so it can't force the developer not
+to use string interpolation.
 
-In the end we did some measurements and concluded that impact isn't as bad as we thought so we will try to just roll with what we have. But then I had a...
+In the end we did some measurements and concluded that impact isn't as bad as we thought so we will try to
+just roll with what we have. But then I had a...
 
 ## Brilliant Idea
 
@@ -41,7 +46,7 @@ So, from performance standpoint it would be ideal if our developers wouldn't hat
 
 ```cs
 if (logger.IsEnabledFor(LogLevel.Info)) {
-    logger.Info($"User {userId} is starting a match {matchId} with {injuredNum} injured players.");
+    logger.Info($"User {userId} from {cityName} logged in on {logInTime}.");
 }
 ```
 
@@ -53,7 +58,7 @@ But of course they do. Not just to type but also to read. There comes my brillia
 logger.Info?.Log($"User {userId} is starting a match {matchId} with {injuredNum} injured players.");
 ```
 
-This is much less painful to type and read? If the logging is disabled the property will return null
+This is much less painful to type and read. If the logging is disabled the property will return null
 and the part after `?.` will not be executed at all. On the other hand if it is enabled it will
 return the struct which doesn't allocate any memory on the heap. If you accidentally try to call the
 `.Log()` method without `?.` you will get a compile error.
