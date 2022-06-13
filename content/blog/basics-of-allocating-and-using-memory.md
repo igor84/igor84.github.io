@@ -183,6 +183,11 @@ Hopefully with just these two examples you can see that memory management can of
 simple. Also solving the issue of memory can be an interesting pursuit of simplicity and
 flexibility.
 
+Also note that although the principles described here should be applicable to any system programming
+language each of them will have its own quirks, especially C and C++. The zig is the first language
+I know that was designed not to have a globally accessible allocator, for example, which forces you
+to be deliberate about your allocations and this post was written with it in mind.
+
 If you want to learn more and practice, I strongly suggest you try the Zig language. Try to solve
 some of the issues you worked on in the past using this language and its conventions and see how
 much fun you find along the way ;).
