@@ -1,0 +1,104 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="height=device-height,width=device-width,initial-scale=1"><meta name=generator content="Hugo 0.100.2"><meta name=generator content="Relearn 3.4.1+tip"><meta name=description content><title>Basics of Allocating and Using Memory :: Dr Iggy's Coding Adventures</title><link rel=alternate type=application/rss+xml href=/blog/basics-of-allocating-and-using-memory/index.xml title="Dr Iggy's Coding Adventures"><link rel=icon href=/images/favicon.svg?1655122211 type=image/svg+xml><link href=/css/nucleus.css?1655122211 rel=stylesheet><link href=/css/fontawesome-all.min.css?1655122211 rel=stylesheet><link href=/css/featherlight.min.css?1655122211 rel=stylesheet><link href=/css/auto-complete.css?1655122211 rel=stylesheet><link href=/css/theme.css?1655122211 rel=stylesheet><link href=/css/theme-relearn-dark.css?1655122211 rel=stylesheet id=variant-style><link href=/css/variant.css?1655122211 rel=stylesheet><link href=/css/print.css?1655122211 rel=stylesheet media=print><link href=/css/custom.css?1655122211 rel=stylesheet><script src=/js/variant.js?1655122211></script>
+<script>var index_url="/index.json",baseUriFull,root_url="/",baseUri=root_url.replace(/\/$/,'');window.T_Copy_to_clipboard='Copy to clipboard',window.T_Copied_to_clipboard='Copied to clipboard!',window.T_Copy_link_to_clipboard='Copy link to clipboard',window.T_Link_copied_to_clipboard='Copied link to clipboard!',baseUriFull='https://igor84.github.io/',variants.init(['relearn-dark','neon','relearn-light'])</script><script src=/js/jquery.min.js?1655122211></script></head><body class=mobile-support data-url=/blog/basics-of-allocating-and-using-memory/><div id=body class=default-animation><div id=sidebar-overlay></div><div id=toc-overlay></div><nav id=topbar class=highlightable><div><div class=navigation><span class="nav nav-next"><i class="fa fa-chevron-right fa-fw"></i></span></div><div class=navigation><a class="nav nav-prev" href=/blog/ title=Blog><i class="fas fa-chevron-left fa-fw"></i></a></div><div id=breadcrumbs><span id=sidebar-toggle-span><a href=# id=sidebar-toggle title=Menu><i class="fas fa-bars fa-fw"></i></a></span>
+<span id=toc-menu title='Table of Contents'><i class="fas fa-list-alt fa-fw"></i></span><ol class=links itemscope itemtype=http://schema.org/BreadcrumbList><meta itemprop=itemListOrder content="Descending"><li itemscope itemtype=https://schema.org/ListItem itemprop=itemListElement><meta itemprop=position content="3"><a itemprop=item href=/><span itemprop=name>Dr Iggy's Coding Adventures</span></a> ></li><li itemscope itemtype=https://schema.org/ListItem itemprop=itemListElement><meta itemprop=position content="2"><a itemprop=item href=/blog/><span itemprop=name>Blog</span></a> ></li><li itemscope itemtype=https://schema.org/ListItem itemprop=itemListElement><meta itemprop=position content="1"><a itemprop=item href=/blog/basics-of-allocating-and-using-memory/ aria-disabled=true><span itemprop=name>Basics of Allocating and Using Memory</span></a></li></ol></div><div class="default-animation progress"><div class=wrapper><nav id=TableOfContents><ul><li><a href=#lesson-1-let-operating-system-do-it>Lesson 1: Let Operating System Do It</a></li><li><a href=#lesson-2-what-is-memory-anyway>Lesson 2: What Is Memory Anyway</a><ul><li><a href=#stack-memory>Stack memory</a></li><li><a href=#heap-memory>Heap memory</a></li></ul></li><li><a href=#lesson-3-allocators>Lesson 3: Allocators</a></li><li><a href=#examples>Examples</a><ul><li><a href=#compiler>Compiler</a></li><li><a href=#image-loader>Image loader</a></li></ul></li><li><a href=#conclusion>Conclusion</a></li></ul></nav></div></div></div></nav><main id=body-inner class=highlightable><div class=flex-block-wrapper><div id=head-tags><div class=tags><a class=tag-link href=/tags/memory>memory</a>
+<a class=tag-link href=/tags/programming>programming</a>
+<a class=tag-link href=/tags/zig>zig</a></div></div><article><h1>Basics of Allocating and Using Memory</h1><p>Many of the top used programming languages today use garbage collection and with them we are always
+taught how manual memory management is hard. I get the feeling that many new programmers don&rsquo;t even
+try to understand it today.</p><p>I want to show here how manual memory management can be not only very easy but also very fun.</p><h2 id=lesson-1-let-operating-system-do-it>Lesson 1: Let Operating System Do It</h2><p>There is a big class of programs that work as command line utilities. They run, do their job and
+exit. Most of them don&rsquo;t need a lot of memory during their entire operation. In programs like this
+you can act as if you have a garbage collector even when you don&rsquo;t because when your program exits
+the operating system will clean up all the memory it used.</p><p>So the best strategy in these kinds of programs is to just allocate memory wherever you need and not
+think about it.</p><h2 id=lesson-2-what-is-memory-anyway>Lesson 2: What Is Memory Anyway</h2><p>As soon as you go to a bit more complicated programs you need a better understanding of what memory
+is and how it can be used in your programs.</p><p>First thing you need to learn is the difference between stack and heap memory.</p><h3 id=stack-memory>Stack memory</h3><p>When you compile and link your code you produce an executable and in it will also be stored how much
+stack memory it needs. There are ways to specify that manually while linking but linkers have a
+default value for it. It is usually 8MB but on Windows it might be just 1MB.</p><p>When your program starts, the OS reserves that much space and sets up a special register to point to
+the start of that memory. Now whenever you define a local variable in your program it gets stored on
+stack. Also when you call some function the return address and all or some of the parameters are
+also stored there. For example if in some function you define a local variable as an array of 100
+integers and if one integer takes 4 bytes you just allocated 400 bytes from the stack memory. So now
+how is that memory freed? Well since every local variable and function parameter can&rsquo;t be used when
+you return from that function all the memory for that function is automatically freed.</p><p>So whenever the program enters a new function and new local variables are declared we say the stack
+grows and whenever we return from a function we say the stack shrinks and that register that points
+to the first free location is incremented or decremented.</p><p>That makes this method of allocation and deallocation the simplest one.</p><p>If you spend all the stack memory that was reserved for your program and you try to make another
+function call the program will fail with Stack Overflow error.</p><p>Important to note is that compilers usually compile the code in such a way that as soon as a
+function is entered the space for all local variables is immediately reserved. Even if some variable
+is only used in some conditional block, space for it will be reserved at the start of the function.
+That is why Stack Overflow errors happen only on entering new functions.</p><h3 id=heap-memory>Heap memory</h3><p>This is usually additional memory that you can request from the OS and this is the memory that you
+actually need to manage and properly release when no longer needed. It is used whenever you need to
+store and keep something, even when you return from some function where it is created or if it is
+too big to fit on the stack.</p><p>When you get this memory what you actually have is a pointer to the first address within it and how
+much after that address is available. Some languages such as Zig represent those two things as one
+thing called a slice. You can read more about Zig slices
+<a href=https://ziglearn.org/chapter-1/#slices>here</a>.</p><p>Anyway it is up to you now how you want to interpret that memory. Is it one integer or an array of
+integers, or maybe a float, a character or some structure. In zig you can use
+<code>std.mem.bytesAsValue(comptime T: type, bytes: anytype)</code> and
+<code>std.mem.bytesToValue(comptime T: type, bytes: anytype)</code> to interpret the given array of bytes as a
+given <code>T</code> type.</p><p>If you are coming from object oriented and garbage collected language you might know that whenever
+you call <code>new SomeClass()</code> the memory for that object is allocated and that object is created but
+you can not imagine how you could control where and how it takes that memory. What the language does
+for you is actually allocate memory for the data of that class, casts the pointer it gets to the
+type of that class, then calls your constructor function and returns you that casted pointer. As you
+can see you can easily do so yourself with just a struct and some function that initializes the
+fields of that struct like a constructor would. Of course, unlike GC langauges you might also need
+to manually release that memory when you no longer need it.</p><p>Now calling the OS whenever you need a few bytes of memory would ruin your performance because
+system calls are expensive. That is why languages usually come with some sort of Allocators.</p><h2 id=lesson-3-allocators>Lesson 3: Allocators</h2><p>Allocators reserve more memory from the system than you currently need so they actually manage a
+pool of memory that you can then efficiently borrow from whenever you need it. C only comes with
+<code>malloc</code> which is a general purpose allocator but zig comes with more options.</p><p>General purpose allocator needs to try and be efficient no matter how you use it. Do you allocate a
+lot of small objects or big ones or a mix of both, do you free often or rare, in small chunks or in
+bulk. They also have to handle memory fragmentation.</p><p>If you imagine memory as a row of bytes where allocation reserves some of those bytes and freeing it
+makes those bytes available for future use you can also imagine how after some usage there might be
+a lot of little boxes that are available for use in between boxes that are still in use. Now if you
+want to allocate something bigger there might be enough total free bytes but none of the boxes might
+be big enough individually. That means your memory is fragmented and a lot of it becomes unusable.</p><p>Because of all of that general purpose allocators are the most complicated and often less efficient
+than specialized allocators tailored for each use.</p><p>One example is <code>ArenaAllocator</code>. It doesn&rsquo;t support freeing individual allocations at all. The idea
+is that you use it within a part of your program which does some processing and needs to do a number
+of allocations none of which will be needed once the processing is complete. That way that part of
+the program can just allocate things and not think about freeing them and once the processing is
+complete you can just call &lsquo;free everything&rsquo; on the ArenaAllocator itself. It is initialized with
+another allocator from which the actual allocating and freeing is done.</p><p>Yet another is <code>FixedBufferAllocator</code>. It is initialized with a limited array of bytes that you want
+to be served as memory from it. If the process then tries to allocate more memory from it than that
+array contains it will get an error. It is useful to make sure parts of the program don&rsquo;t
+accidentally allocate more than they should or that they don&rsquo;t leak memory. It is also useful
+because you can initialize it with a local array that is on the stack and pass that as an allocator
+to some library. You can only do this if the library has documented how much maximum memory it will
+need to do its job and if that amount can fit on the stack. This way the actual allocation it does
+through that allocator will be as cheap as possible and plus after its job is done all the memory is
+guaranteed to be freed.</p><p>You can also use <code>StackFallbackAllocator</code> with a certain size, which will under the hood use a
+<code>FixedBufferAllocator</code> on stack while the allocations fit in the given size and then start using a
+provided fallback allocator for the rest of allocations.</p><p>Some others are <code>PageAllocator</code> which always allocates whole pages from the OS, which are usually
+4KiB in size and <code>LoggingAllocator</code> that can log each allocation that happens through it.</p><p>Now with just these you now have a lot of tools in your arsenal you can play with.</p><h2 id=examples>Examples</h2><h3 id=compiler>Compiler</h3><p>Compilers usually work in multiple passes. Each pass goes through data from the previous pass and
+generates new or modifies existing data. Input for the first pass is of course a code file which can
+also be thought of as a long string that needs to be parsed.</p><p>As each pass works it will need to allocate some temporary memory for its operation. For that
+purpose it is best to allocate one block big enough to fit estimated temporary allocations of each
+pass, maybe through <code>PageAllocator</code> and then make one <code>FixedBufferAllocator</code> over that memory that
+you will call the <code>reset()</code> on after each pass. That will simply make the whole buffer it uses ready
+to be used from start for the next pass thus reusing that initial allocation for each pass. It will
+also limit the temporary memory each pass can take so you can detect memory leaks earlier.</p><p>For the things that one pass generates for the next to use it might be best to use <code>ArenaAllocator</code>.
+That way if there is a pass in the pipeline that generates completely new data from the previous
+ones you can just call <code>deinit()</code> on that allocator to free all the memory allocated from previous
+passes at once.</p><p>Either way the memory that you need all the way until the end of the compiling process probably
+doesn&rsquo;t need to be manually freed at all since the compiler process will shutdown when it is
+finished and the OS will clean up all its memory anyway.</p><h3 id=image-loader>Image loader</h3><p>If you are writing a lib that needs to parse some file formats like png or jpg and return parsed
+pixels it is best to allow the users to pass in the allocator that should be used. The catch is that
+besides allocating space for resulting data the lib might need to allocate some temporary memory for
+processing. It could just use the same allocator and in that case the best practice would be to
+first allocate the space for the result and then start allocating and freeing the temporary data.
+That way you minimize the possibility for fragmenting memory.</p><p>If you can guarantee the temporary space needed no matter the image size then you can internally
+make a FixedBufferAllocator that will also quickly catch if you by mistake miss that target. If the
+amount is also small you can just define a local array on the stack to serve as a backing buffer for
+that allocator. Otherwise you would probably allocate the buffer from the given allocator.</p><p>Third option could be that you allow the user to pass in an additional allocator for temporary
+allocations. It is best if you at least make it optional if you don&rsquo;t expect users will need that
+level of customization often. You can still internally combine the methods above with that
+allocator.</p><h2 id=conclusion>Conclusion</h2><p>Hopefully with just these two examples you can see that memory management can often be made very
+simple. Also solving the issue of memory can be an interesting pursuit of simplicity and
+flexibility.</p><p>If you want to learn more and practice, I strongly suggest you try the Zig language. Try to solve
+some of the issues you worked on in the past using this language and its conventions and see how
+much fun you find along the way ;).</p><footer class=footline></footer></article></div></main></div><aside id=sidebar class="default-animation showVisitedLinks"><div id=header-wrapper class=default-animation><div id=header class=default-animation><a id=logo href=/><img src=/images/logo.svg alt=Author></a></div><div class="searchbox default-animation"><label for=search-by><i class="fas fa-search"></i></label>
+<input data-search-input id=search-by type=search placeholder=Search...>
+<span data-search-clear><i class="fas fa-times"></i></span></div><script src=/js/lunr.min.js?1655122211></script>
+<script src=/js/auto-complete.js?1655122211></script>
+<script src=/js/search.js?1655122211></script></div><div id=content-wrapper class=highlightable><ul class="topics collapsible-menu"><li data-nav-id=/blog/ title=Blog class=dd-item><a href=/blog/>Blog<i class="fas fa-check read-icon"></i></a></li></ul><div id=shortcuts><div class=nav-title>More</div><ul><li><a class=padding href=/more/about-me/><i class='fas fa-address-card'></i> About me</a></li><li><a class=padding href=https://github.com/igor84/><i class='fab fa-fw fa-github'></i> GitHub profile</a></li><li><a class=padding href=/tags/><i class='fas fa-fw fa-tags'></i> Tags</a></li></ul></div><div class="footermargin footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showVariantSwitch showVisitedLinks showFooter"></div><hr class="default-animation footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showVariantSwitch showVisitedLinks showFooter"><div id=prefooter class="footerLangSwitch footerVariantSwitch footerVisitedLinks showVariantSwitch showVisitedLinks"><ul><li id=select-language-container class=footerLangSwitch><a class="padding select-container"><i class="fas fa-language fa-fw"></i>
+<span>&nbsp;</span><div class=select-style><select id=select-language onchange="location=baseUri+this.value"></select></div><div class=select-clear></div></a></li><li id=select-variant-container class="footerVariantSwitch showVariantSwitch"><a class="padding select-container"><i class="fas fa-paint-brush fa-fw"></i>
+<span>&nbsp;</span><div class=select-style><select id=select-variant onchange=variants.changeVariant(this.value)><option id=relearn-dark value=relearn-dark selected>Relearn Dark</option><option id=neon value=neon>Neon</option><option id=relearn-light value=relearn-light>Relearn Light</option></select></div><div class=select-clear></div></a><script>variants.markSelectedVariant()</script></li><li class="footerVisitedLinks showVisitedLinks"><a class=padding href=# data-clear-history-toggle><i class="fas fa-history fa-fw"></i> Clear History</a></li></ul></div><div id=footer class="footerFooter showFooter"><p>Built with <a href=https://github.com/McShelby/hugo-theme-relearn><i class="fas fa-heart"></i></a> by <a href=https://gohugo.io/>Hugo</a></p></div></div></aside><script src=/js/clipboard.min.js?1655122211></script>
+<script src=/js/featherlight.min.js?1655122211></script>
+<script src=/js/theme.js?1655122211></script></body></html>
