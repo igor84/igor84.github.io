@@ -70,10 +70,12 @@ thing called a slice. You can read more about Zig slices
 [here](https://ziglearn.org/chapter-1/#slices).
 
 Anyway it is up to you now how you want to interpret that memory. Is it one integer or an array of
-integers, or maybe a float, a character or some structure. In zig you can use
-`std.mem.bytesAsValue(comptime T: type, bytes: anytype)` and
-`std.mem.bytesToValue(comptime T: type, bytes: anytype)` to interpret the given array of bytes as a
-given `T` type.
+integers, or maybe a float, a character or some structure. In zig you can use one of these
+```zig
+std.mem.bytesAsValue(comptime T: type, bytes: anytype)
+std.mem.bytesToValue(comptime T: type, bytes: anytype)
+```
+to interpret the given array of bytes as a given `T` type.
 
 If you are coming from object oriented and garbage collected language you might know that whenever
 you call `new SomeClass()` the memory for that object is allocated and that object is created but
