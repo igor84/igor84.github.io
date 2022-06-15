@@ -75,3 +75,16 @@ body {
 #footer {
     padding-left: 1em;
 }
+
+pre {
+    padding: 0.1rem;
+    margin: 1rem 0;
+}
+
+.lntd:last-child {
+    width: 100%;
+}
+
+.chroma .hl {
+    background-color: var(--MENU-SECTION-HR-color);
+}
