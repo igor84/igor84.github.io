@@ -22,8 +22,9 @@ but it has its own problems and I plan to analyze and propose alternatives to it
 
 Note that the example I gave only mixes in additional behavior while, in general, mixins might also
 allow mixing in state, or in other words additional fields. In Zig you can't mix in additional
-fields only functions and consts. The cases where you actually need to mix in state are very rare
-and I couldn't come up with a single non contrived example to show here.
+fields only functions and consts, but mixin code does have access to its modules global variables.
+The cases where you actually need to mix in state are very rare and I couldn't come up with a single
+non contrived example to show here.
 
 ## How are mixins done in Zig
 
