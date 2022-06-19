@@ -264,5 +264,8 @@ consolidate it if you are making an optimized build but there is no way to know 
 work. On the other hand that amount of compiled code will most likely be insignificant in any kind
 of useful program so there are very limited cases where that size might be a factor.
 
+Also note that Zig compiler will only generate code for definitions that are actually used by the
+program and not for every possible definition which also reduces this problem a lot.
+
 What do you think about this pattern? Do you see any other downsides to using it? If you interested
-in discussing it join us on [Ziggit](https://forum.ziggit.dev/t/mixins-in-zig/) forum.
+in discussing it join us on [Ziggit](https://forum.ziggit.dev/t/mixins-in-zig/208/) forum.
