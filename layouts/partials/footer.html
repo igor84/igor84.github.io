@@ -4,6 +4,9 @@
 {{- partial "custom-comments.html" . }}
     </div><!-- #body -->
 {{- partial "menu.html" . }}
+    <script src="{{"js/clipboard.min.js" | relURL}}{{ if not .Site.Params.disableAssetsBusting }}?{{ now.Unix }}{{ end }}"></script>
+    <script src="{{"js/perfect-scrollbar.min.js" | relURL}}{{ if not .Site.Params.disableAssetsBusting }}?{{ now.Unix }}{{ end }}"></script>
+    <script src="{{"js/featherlight.min.js" | relURL}}{{ if not .Site.Params.disableAssetsBusting }}?{{ now.Unix }}{{ end }}"></script>
 {{- $wantsMermaid := or (and (eq (.Scratch.Get "relearnOutputFormat") "HTML") (.Page.Store.Get "htmlHasMermaid")) (and (eq (.Scratch.Get "relearnOutputFormat") "PRINT") (.Page.Store.Get "printHasMermaid")) }}
 {{- if (or $wantsMermaid (and (ne .Params.disableMermaid nil) (not .Params.disableMermaid)) (and (ne .Site.Params.disableMermaid nil) (not .Site.Params.disableMermaid)) ) }}
     <script src="{{"js/jquery.svg.pan.zoom.js" | relURL}}{{ if not .Site.Params.disableAssetsBusting }}?{{ now.Unix }}{{ end }}"></script>
